@@ -7,6 +7,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.Map;
 
@@ -15,14 +16,19 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 @Slf4j
 public class GameResource {
-    private final Client client = ClientBuilder.newClient();
-    private static final String AUTH_BASE = "http://localhost:8082/auth";
+    private final Client client;
+    private final String authBase;
+
+    public GameResource(@ConfigProperty(name = "auth.base") String authBase) {
+        this.client = ClientBuilder.newClient();
+        this.authBase = authBase;
+    }
 
     @GET
     @Path("/play")
     public Response play(@QueryParam("sessionId") String sessionId) {
         if (sessionId == null) return Response.status(401).entity(new ResponseError("missing_session")).build();
-        Response response = client.target(AUTH_BASE + "/validate/" + sessionId).request(MediaType.APPLICATION_JSON).get();
+        Response response = client.target(authBase + "/validate/" + sessionId).request(MediaType.APPLICATION_JSON).get();
         if (response.getStatus() != 200) {
             return Response.status(401).entity(new ResponseError("invalid_session")).build();
         }

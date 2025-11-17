@@ -7,27 +7,33 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.net.URI;
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RequiredArgsConstructor
 @Slf4j
 public class AuthResource {
     private final PlatformPolicyRepository policyRepo;
 
-    private final ConcurrentHashMap<String, PlayerSession> sessions = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, PlayerSession> sessions; // In real world use separate redis POD to be able horizontally scale AuthResource if needed
     @Getter
-    private final Key jwtKey = Keys.hmacShaKeyFor("my-super-secret-key-12345678901234567890".getBytes());
+    private final Key jwtKey;
+
+    public AuthResource(
+            @ConfigProperty(name = "jwt.secret.key") String jwtSecretKey,
+            PlatformPolicyRepository policyRepo) {
+        this.policyRepo = policyRepo;
+        this.jwtKey = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
+        this.sessions = new ConcurrentHashMap<>();
+    }
 
     @GET
     @Path("/login")
