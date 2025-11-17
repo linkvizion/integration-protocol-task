@@ -1,6 +1,7 @@
 
 package org.snebesnyi;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Produces(value = MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Slf4j
+@ApplicationScoped
 public class GameResource {
     private final Client client;
     private final String authBase;
@@ -33,12 +35,12 @@ public class GameResource {
             return Response.status(401).entity(new ResponseError("invalid_session")).build();
         }
         GameMessage gameMessage = response.readEntity(GameMessage.class);
-        log.info("Serving game to player_id {} for game_id {}", gameMessage.player(), gameMessage.game());
+        log.info("Serving game to player_id {} for game_id {}", gameMessage.playerId(), gameMessage.gameId());
         return Response
                 .ok(Map.of(
                         "message", "welcome to game",
-                        "player", gameMessage.player(),
-                        "game", gameMessage.game()
+                        "player", gameMessage.playerId(),
+                        "game", gameMessage.gameId()
                 )).build();
     }
 }

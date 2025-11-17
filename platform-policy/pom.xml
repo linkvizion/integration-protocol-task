@@ -20,8 +20,6 @@
         <dependency>
             <groupId>org.snebesnyi</groupId>
             <artifactId>common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
