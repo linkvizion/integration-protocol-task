@@ -78,6 +78,28 @@ public class AuthResource {
     }
 
     @GET
+    @Path("/login/test")
+    public Response loginTest() {
+        String platformId = "test_platform_id";
+        String playerId = "123";
+        String gameId = "test_game_id";
+        String currency = "test_currency";
+        String returnUrl = "";
+
+        PlatformPolicy policy = policyRepo.getPolicy(platformId);
+        if (policy == null) return redirectError(returnUrl, "platform_unknown");
+
+        if (!policy.allowedGames().contains(gameId)) return redirectError(returnUrl, "game_not_allowed");
+
+        String sessionId = UUID.randomUUID().toString();
+        PlayerSession s = new PlayerSession(sessionId, playerId, platformId, gameId, currency);
+        sessions.put(sessionId, s);
+        log.info("Created session {} for player {}", sessionId, playerId);
+
+        return Response.seeOther(URI.create("/game/play?sessionId=" + sessionId)).build();
+    }
+
+    @GET
     @Path("/validate/{sessionId}")
     public Response validate(@PathParam("sessionId") String sessionId) {
         PlayerSession playerSession = sessions.get(sessionId);
