@@ -1,8 +1,9 @@
 
-package org.snebesnyi;
+package org.snebesnyi.common;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,8 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 @ApplicationScoped
-@Slf4j
 public class InMemoryKafka {
+    private static final Logger log = LoggerFactory.getLogger(InMemoryKafka.class);
     private final Map<String, CopyOnWriteArrayList<Consumer<Object>>> subscribers = new ConcurrentHashMap<>();
 
     public <T> void publish(String topic, T message) {

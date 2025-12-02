@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.snebesnyi.PlatformPolicy;
-import org.snebesnyi.PlatformPolicyRepository;
+import org.snebesnyi.common.PlatformPolicy;
+import org.snebesnyi.auth.PlatformPolicyRepository;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;

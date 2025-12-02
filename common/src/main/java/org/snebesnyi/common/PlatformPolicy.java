@@ -1,5 +1,5 @@
 
-package org.snebesnyi;
+package org.snebesnyi.common;
 
 import java.util.Set;
 

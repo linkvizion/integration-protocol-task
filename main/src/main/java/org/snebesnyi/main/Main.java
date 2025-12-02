@@ -1,4 +1,4 @@
-package org.snebesnyi;
+package org.snebesnyi.main;
 
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.annotations.QuarkusMain;

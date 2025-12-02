@@ -1,5 +1,5 @@
 
-package org.snebesnyi;
+package org.snebesnyi.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -8,8 +8,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.snebesnyi.common.PlatformPolicy;
+import org.snebesnyi.common.ResponseError;
 
 import java.net.URI;
 import java.security.Key;
@@ -20,9 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Slf4j
 @ApplicationScoped
 public class AuthResource {
+    private static final Logger log = LoggerFactory.getLogger(AuthResource.class);
     private final PlatformPolicyRepository policyRepo;
 
     private final ConcurrentHashMap<String, PlayerSession> sessions; // In real world use separate redis POD to be able horizontally scale AuthResource if needed

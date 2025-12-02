@@ -1,4 +1,4 @@
-package org.snebesnyi;
+package org.snebesnyi.auth;
 
 public record PlayerSession(String sessionId,
                             String playerId,

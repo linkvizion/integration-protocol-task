@@ -1,5 +1,5 @@
 
-package org.snebesnyi;
+package org.snebesnyi.policy;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.Consumes;
@@ -8,18 +8,24 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.snebesnyi.common.InMemoryKafka;
+import org.snebesnyi.common.PlatformPolicy;
+import org.snebesnyi.common.PlatformPolicyEvent;
 
 import java.util.Set;
 
 @Path("/platform")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Slf4j
-@RequiredArgsConstructor
 public class PlatformPolicyPublisher {
+    private static final Logger log = LoggerFactory.getLogger(PlatformPolicyPublisher.class);
     private final InMemoryKafka bus;
+
+    public PlatformPolicyPublisher(InMemoryKafka bus) {
+        this.bus = bus;
+    }
 
     @PostConstruct
     void init() {
